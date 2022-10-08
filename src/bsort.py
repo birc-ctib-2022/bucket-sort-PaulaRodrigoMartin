@@ -1,5 +1,6 @@
 """Module for bucket sorting."""
 
+from platform import java_ver
 from typing import Any
 
 
@@ -29,10 +30,16 @@ def count_keys(keys: list[int]) -> list[int]:
     # we can get the number of keys from keys if
     # it is non-empty. Otherwise we must assume that
     # there are no keys.
-    no_keys = max(keys) + 1 if keys else 0
-    counts = [0] * no_keys
+    no_keys = max(keys) + 1 if keys else 0 #length of keys
+    counts = [0] * no_keys #counts is a list of 0s of length of keys
+    # print(keys)
     # FIXME: count the keys
+    for i in keys:
+        counts[i] += 1
     return counts
+
+print(count_keys([1, 2, 2, 1, 4]))
+
 
 
 def count_sort(x: list[int]) -> list[int]:
@@ -49,9 +56,22 @@ def count_sort(x: list[int]) -> list[int]:
     """
     counts = count_keys(x)
     out = [0] * len(x)
-    # FIXME: do the actual sorting
-    return out
 
+    ## to iterate over the whole list, could also put --> for i in range(len(counts)-1)
+    ## this is to iterate over the list, but I don't know how to put it into "out"
+    for i in range(1,len(counts)): 
+        ## to assess the index and the value to start (float("inf") is a very big number to start, could also be 99999999... and it would work, but to make sure)
+        min_idx, min_val = 0, float("inf")
+        ## to iterate over the list and find the smalles number
+        for j in range(i, len(counts)):
+            if counts[j] < min_val:
+                min_idx, min_val = j, counts[j]
+        ## and change the minimum value with the first position         
+        counts[i], counts[min_idx] = min_val, counts[i]
+    ## i don't know how to put the values to another list "out", instead of ordering them in the same list
+    return counts
+
+print(count_sort([1, 2, 1, 2, 4])) #-->[0,0,1,2,2]
 
 def cumsum(x: list[int]) -> list[int]:
     """
@@ -64,6 +84,7 @@ def cumsum(x: list[int]) -> list[int]:
     """
     out = [0] * len(x)
     # FIXME: Compute the cumulative sum
+    
     return out
 
 
@@ -83,3 +104,4 @@ def bucket_sort(x: list[tuple[int, Any]]) -> list[tuple[int, Any]]:
     out = [(0, None)] * len(x)
     # Place the pairs in their buckets
     return out
+
